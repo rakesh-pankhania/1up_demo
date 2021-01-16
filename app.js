@@ -1,4 +1,5 @@
 const http = require('http');
+require('dotenv').config();
 
 const hostname = '127.0.0.1';
 const port = 3000;
@@ -8,6 +9,9 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/plain');
   res.end('Hello World');
 });
+
+// process.env.OAUTH_CLIENT_ID
+// process.env.OAUTH_CLIENT_SECRET
 
 server.listen(port, hostname, () => {
   console.log(`Server running at http://${hostname}:${port}/`);
