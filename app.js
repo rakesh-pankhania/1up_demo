@@ -3,11 +3,14 @@ const express = require('express');
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'pug')
+
 // process.env.OAUTH_CLIENT_ID
 // process.env.OAUTH_CLIENT_SECRET
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  // res.send('Hello World!');
+  res.render('index', { title: 'Welcome', message: 'Hello World!' });
 })
 
 app.listen(port, () => {
