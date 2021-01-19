@@ -1,15 +1,18 @@
 require('dotenv').config();
+// TODO: Remove Axios
 const axios = require('axios');
 const express = require('express');
+const { OneUpClient } = require('./modules/one_up_client.js');
 
 const app = express();
+const oneUpClient = new OneUpClient(process.env.OAUTH_CLIENT_ID, process.env.OAUTH_CLIENT_SECRET);
 const port = 3000;
-const staticUserId = 1;
 
 app.set('view engine', 'pug')
 app.use(express.urlencoded({extended: false}));
 
-//       let systemLink = `https://api.1up.health/connect/system/clinical/11046?client_id=${process.env.OAUTH_CLIENT_ID}&access_token=${token}`
+// TODO: Move users around
+const staticUserId = 1;
 
 app.get('/', (req, res) => {
   res.render('index');
@@ -59,45 +62,19 @@ app.get('/users/new', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-  axios.get('https://api.1up.health/user-management/v1/user', {
-    params: {
-      client_id: process.env.OAUTH_CLIENT_ID,
-      client_secret: process.env.OAUTH_CLIENT_SECRET
-    }
-  }).then((response) => {
-    console.log("USERS");
-    console.log(response.data.entry);
-    res.render('users/index', { users: response.data.entry });
+  oneUpClient.getUsers().then((users) => {
+    res.render('users/index', { users });
   }).catch((response) => {
-    console.log("USERS ERROR");
-    console.log(response.data);
     res.send("Error :(");
   });
 });
 
 app.post('/users', (req, res) => {
-  let appUserId = req.body.applicationUserId
-
-  axios.post('https://api.1up.health/user-management/v1/user', {
-    app_user_id: appUserId,
-    client_id: process.env.OAUTH_CLIENT_ID,
-    client_secret: process.env.OAUTH_CLIENT_SECRET
-  }).then((response) => {
-    console.log("USER CREATE");
-    console.log(response.data);
-    res.redirect('/');
+  oneUpClient.createUser(req.body.applicationUserId).then((user) => {
+    res.redirect('/users')
   }).catch((response) => {
-    console.log("USER CREATE ERROR");
     res.send("Error :(")
   });
-
-  // {
-  //   success: true,
-  //   code: '280ea50b52848de47fad9f091b3e03d7063f02ef',
-  //   oneup_user_id: 123439011,
-  //   app_user_id: '1',
-  //   active: true
-  // }
 });
 
 app.get('/kitchen_sink', (req, res) => {
