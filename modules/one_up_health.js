@@ -87,8 +87,6 @@ class OneUpClient {
   connectPatientUrl(healthSystemId, userToken) {
     return `${ONE_UP_ROOT_URL}/connect/system/clinical/${healthSystemId}?client_id=${this.clientId}&access_token=${userToken}`;
   }
-
-
 }
 
 module.exports.OneUpClient = OneUpClient;
