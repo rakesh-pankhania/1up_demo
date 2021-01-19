@@ -111,11 +111,14 @@ app.get('/users/:userId/patients', (req, res) => {
 
 app.get('/users/:userId/patients/:patientId/everything', (req, res) => {
   let user = usersTable.getUser(req.params.userId);
-  let patientId = req.params.patientId
+  let patientId = req.params.patientId;
+  let skip = parseInt(req.query.skip || '0');
   let userAccessToken = user.access_token;
 
-  oneUpClient.getPatientEverything(userAccessToken, patientId).then((everything) => {
-    res.render('patients/everything', { user, patientId, everything })
+  oneUpClient.getPatientEverything(userAccessToken, patientId, skip).then((everything) => {
+    // console.log(JSON.stringify(everything));
+    let nextLink = everything.link && everything.link.find((el) => el.relation == "next");
+    res.render('patients/everything', { user, patientId, skip, everything, nextLink })
   }).catch((response) => {
     res.send('Error :(');
     console.error(response);

@@ -1,7 +1,15 @@
-h1 Create a new user
+extends ../layout.pug
 
-form(method="POST" action="/users")
-  label(for="inputApplicationUserId") Username
-  input(type="text" name="applicationUserId" id="inputApplicationUserId")
-  <br /><br />
-  button(type="submit") Create User
+block content
+  <ol class="breadcrumb">
+    <li><a href="/users">Users</a></li>
+    <li class="active">Create new user</li>
+  </ol>
+
+  form(method="POST" action="/users")
+    div(class="row mb-3")
+      div(class="col-lg-3")
+        label(for="inputApplicationUserId") Username
+        input(type="text" class="form-control" name="applicationUserId" id="inputApplicationUserId" required)
+    p
+    button(type="submit" class="btn btn-primary") Create User

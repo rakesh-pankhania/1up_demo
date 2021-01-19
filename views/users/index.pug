@@ -1,10 +1,14 @@
-h1 Users
+extends ../layout.pug
 
-p Choose someone to log in as
+block content
+  <ol class="breadcrumb">
+    <li class="active">Users</li>
+  </ol>
 
-ul
-  each user in users
-    li
-      a(href=`/users/${user.app_user_id}`) User #{user.app_user_id}
+  div(class="alert alert-info") Choose a user below to act as. Alternatively, you can create a new user. There is no "logging in" to this application, just clicking the user is good enough.
 
-a(href='/users/new') Create someone new...
+  div(class="list-group")
+    a(href="/users/new" class="list-group-item active") Create someone new...
+
+    each user in users
+      a(href=`/users/${user.app_user_id}` class="list-group-item") User #{user.app_user_id}

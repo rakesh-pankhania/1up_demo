@@ -1,5 +1,25 @@
-h1 Everything #{user.app_user_id} can see about #{patientId}
+extends ../layout.pug
 
-pre
-  = JSON.stringify(everything)
-pre
+block content
+  <ol class="breadcrumb">
+    <li><a href="/users">Users</a></li>
+    <li><a href="/users/#{user.app_user_id}">#{user.app_user_id}</a></li>
+    <li><a href="/users/#{user.app_user_id}/patients">Patient Resources</a></li>
+    <li class="active">#{patientId}</li>
+  </ol>
+
+  div(class="alert alert-info") Below is everything that #{user.app_user_id} is authorized to see for patient #{patientId}
+
+  each thing in everything.entry
+    div(class="panel panel-default")
+      div(class="panel-heading") #{thing.resource.resourceType} #{thing.resource.id}
+
+      div(class="panel-body")
+        div!= (thing.resource.text && thing.resource.text.div)
+        pre= JSON.stringify(thing.resource)
+
+      div(class="panel-footer")
+        span(class="text-muted") Last updated #{thing.resource.meta.lastUpdated}
+
+  if nextLink
+    a(href=`/users/${user.app_user_id}/patients/${patientId}/everything?skip=${skip + 10}` class="mb-5") Next page >

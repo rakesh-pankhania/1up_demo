@@ -123,13 +123,11 @@ class OneUpClient {
     });
   }
 
-  getPatientEverything(userToken, patientId) {
+  getPatientEverything(userToken, patientId, skip = 0) {
     return new Promise((resolve, reject) => {
-      axios.get(`${ONE_UP_ROOT_URL}/fhir/dstu2/Patient/${patientId}/$everything`, {
+      axios.get(`${ONE_UP_ROOT_URL}/fhir/dstu2/Patient/${patientId}/$everything?_skip=${skip}`, {
         headers: { Authorization: `Bearer ${userToken}` }
       }).then((response) => {
-        console.log('EVERYTHING GOOD');
-        console.log(response);
         resolve(response.data);
       }).catch((response) => {
         console.error('1up client getPatientEverything() error');

@@ -1,11 +1,13 @@
-html
-  head
-    title 1upHealth Demo
-  body
-    h1 Rakesh Pankhania 1upHealth Demo Application
+extends layout.pug
 
-    a(href="users/new") Create a new user
-    <br />
-    a(href="users") See all users
-    <br />
-    a(href="connections") See EHR connections
+block content
+  div(class="jumbotron")
+    h2 1upHealth Demo Application
+
+    p This is a web application that uses the 1upHealth API to access test patient data. You can do the following:
+      ul
+        li Create basic users in this application, which automatically get created in 1upHealth
+        li Utilize an EHR connection to populate health data for demo users
+        li View authorized patient information depending on user permissions
+
+    a(href="/users" class="btn btn-primary btn-lg") Start here

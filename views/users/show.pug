@@ -1,12 +1,29 @@
-h1 User #{userId}
+extends ../layout.pug
 
-p Token #{userAccessToken} (but don't tell anyone)
+block content
+  <ol class="breadcrumb">
+    <li><a href="/users">Users</a></li>
+    <li class="active">#{userId}</li>
+  </ol>
 
-h3 See patient data
-a(href=`/users/${userId}/patients`) Click here
+  h2 Acting as #{userId}
 
-h3 Connect an EHR
-each connection in connections
-    a(href=`/users/${userId}/connections/${connection.id}`)
-      img(src=connection.logo)
-      #{connection.name}
+  div(class="alert alert-warning") Your access token is #{userAccessToken}, <b>but don't tell anyone!</b>
+
+  div(class="panel panel-default")
+    div(class="panel-heading")
+      h3(class="panel-title") See patient data
+
+    div(class="panel-body")
+      p If you have created patients and/or connected some EHR data, you can see what you have access to <a href="/users/#{userId}/patients">here</a>.
+
+
+  div(class="panel panel-default")
+    div(class="panel-heading")
+      h3(class="panel-title") Connect an EHR
+
+    div(class="panel-body")
+      p Click an EHR below connect your data to this application. You will be asked to enter your username & password for that EHR and then authorize us access to your data.
+      each connection in connections
+        a(href=`/users/${userId}/connections/${connection.id}`)
+          img(src=connection.logo style="border: 2px solid #DDD; border-radius: 5px;")

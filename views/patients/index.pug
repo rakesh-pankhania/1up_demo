@@ -1,10 +1,21 @@
-h1 Data that #{user.app_user_id} can see
+extends ../layout.pug
 
-each patient in patients
-  h4 #{patient.resource.id}
-  First Name
-  Last Name
-  a(href=`/users/${user.app_user_id}/patients/${patient.resource.id}/everything`) See EVERYTHING
-  pre
-    = JSON.stringify(patient)
-  pre
+block content
+  <ol class="breadcrumb">
+    <li><a href="/users">Users</a></li>
+    <li><a href="/users/#{user.app_user_id}">#{user.app_user_id}</a></li>
+    <li class="active">Patient Resources</li>
+  </ol>
+
+  div(class="alert alert-info") Below are the patients that #{user.app_user_id} is authorized to see.
+
+  each patient in patients
+    div(class="panel panel-default")
+      div(class="panel-body")
+        p ID: #{patient.resource.id}
+        p Name: #{patient.resource.name[0].text}
+        p DOB: #{patient.resource.birthDate}
+        p Gender: #{patient.resource.gender}
+
+      div(class="panel-footer")
+        div Would you like to know more? <a href="/users/#{user.app_user_id}/patients/#{patient.resource.id}/everything" class="alert-link">See EVERYTHING about this patient</a>.
