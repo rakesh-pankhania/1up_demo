@@ -1,0 +1,10 @@
+h1 Data that #{user.app_user_id} can see
+
+each patient in patients
+  h4 #{patient.resource.id}
+  First Name
+  Last Name
+  a(href=`/users/${user.app_user_id}/patients/${patient.resource.id}/everything`) See EVERYTHING
+  pre
+    = JSON.stringify(patient)
+  pre

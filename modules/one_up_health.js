@@ -84,8 +84,59 @@ class OneUpClient {
     https://1up.health/docs/api/connect-patient/reference
   */
 
-  connectPatientUrl(healthSystemId, userToken) {
-    return `${ONE_UP_ROOT_URL}/connect/system/clinical/${healthSystemId}?client_id=${this.clientId}&access_token=${userToken}`;
+  connectPatientUrl(healthSystemId, userToken, state) {
+    return `${ONE_UP_ROOT_URL}/connect/system/clinical/${healthSystemId}?client_id=${this.clientId}&access_token=${userToken}&state=${state}`;
+  }
+
+  /*
+    FHIR Resources
+    https://1up.health/dev/reference/fhir-resources
+  */
+
+  getPatients(userToken) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${ONE_UP_ROOT_URL}/fhir/dstu2/Patient`, {
+        headers: {
+          Authorization: `Bearer ${userToken}`
+        }
+      }).then((response) => {
+        resolve(response.data.entry);
+      }).catch((response) => {
+        console.error('1up client getPatients() error');
+        console.error(response)
+        reject(response);
+      });
+    });
+  }
+
+  createPatient(userToken, patientData) {
+    return new Promise((resolve, reject) => {
+      axios.post(`${ONE_UP_ROOT_URL}/fhir/dstu2/Patient`, patientData, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      }).then((response) => {
+        resolve(response.data);
+      }).catch((response) => {
+        console.error('1up client createPatient() error');
+        console.error(response)
+        reject(response);
+      });
+    });
+  }
+
+  getPatientEverything(userToken, patientId) {
+    return new Promise((resolve, reject) => {
+      axios.get(`${ONE_UP_ROOT_URL}/fhir/dstu2/Patient/${patientId}/$everything`, {
+        headers: { Authorization: `Bearer ${userToken}` }
+      }).then((response) => {
+        console.log('EVERYTHING GOOD');
+        console.log(response);
+        resolve(response.data);
+      }).catch((response) => {
+        console.error('1up client getPatientEverything() error');
+        console.error(response)
+        reject(response);
+      });
+    });
   }
 }
 
