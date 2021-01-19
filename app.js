@@ -78,12 +78,23 @@ app.get('/users/:userId/connections/:connectionId', (req, res) => {
   // Generate state and save to store
   let state = Math.random().toString(20).substr(2, 6);
   oauthStateStore[state] = {
-    redirectUrl: `/users/${user.id}`
+    redirectUrl: `/users/${user.app_user_id}`
   }
 
   // Redirect user to auth connection URL
   let redirectUrl = oneUpClient.connectPatientUrl(connection.id, user.access_token, state);
-  res.send('Going to oauth: ' + redirectUrl);
+  res.redirect(redirectUrl);
+});
+
+app.get('/oauth/callback', (req, res) => {
+  if (req.query.success == 'true') {
+    let stateInfo = oauthStateStore[req.query.state].redirectUrl;
+    res.redirect(redirectUrl);
+  }
+  else {
+    console.log(req);
+    res.send('Could not authenticate with connection');
+  }
 });
 
 app.get('/users/:userId/patients', (req, res) => {

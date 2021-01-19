@@ -5,7 +5,7 @@ p Token #{userAccessToken} (but don't tell anyone)
 h3 See patient data
 a(href=`/users/${userId}/patients`) Click here
 
-h3 Connect to an EHR
+h3 Connect an EHR
 each connection in connections
     a(href=`/users/${userId}/connections/${connection.id}`)
       img(src=connection.logo)
