@@ -1,0 +1,10 @@
+h1 User #{userId}
+
+p Token #{userToken} (but don't tell anyone)
+
+h4 Connect to an EHR
+
+each connection in connections
+    a(href=connection.url)
+      img(src=connection.logo)
+      #{connection.name}
