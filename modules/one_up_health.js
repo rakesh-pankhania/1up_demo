@@ -1,6 +1,13 @@
 const axios = require('axios');
 const ONE_UP_ROOT_URL = 'https://api.1up.health';
 
+/*
+  OneUpClient is an API client that interacts with the 1upHealth API. Usage:
+
+  client = new OneUpClient(CLIENT_ID, CLIENT_SECRET);
+  client.getUsers().then((users) => { console.log(users); });
+*/
+
 class OneUpClient {
   constructor(clientId, clientSecret) {
     this.clientId = clientId;

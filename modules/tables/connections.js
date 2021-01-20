@@ -1,3 +1,8 @@
+/*
+  ConnectionTable is an in-memory, schemaless table class that contains
+  information about connections
+*/
+
 class ConnectionTable {
   constructor() {
     this.table = {};

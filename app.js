@@ -19,24 +19,27 @@ seedConnectionsFromOneUp(oneUpClient);
 
 
 // Configure app
-app.set('view engine', 'pug')
+app.set('view engine', 'pug');
 app.use(express.urlencoded({extended: false}));
 
 
-// Set routes
+// Index page: Displays summary of application
 app.get('/', (req, res) => {
   res.render('index');
 });
 
+// New user page: Displays form to create a new user
 app.get('/users/new', (req, res) => {
   res.render('users/form');
 });
 
+// User index page: Displays all users
 app.get('/users', (req, res) => {
   res.render('users/index', { users: usersTable.getUsers() });
   usersTable.logTable();
 });
 
+// User page: Displays user token and links to areas to view/manage EHR data
 app.get('/users/:userId', (req, res) => {
   let user = usersTable.getUser(req.params.userId);
   let connections = connectionsTable.getConnections();
@@ -61,16 +64,18 @@ app.get('/users/:userId', (req, res) => {
   }
 });
 
+// Create user: Creates a user via the 1upHealth API, then stores in local DB
 app.post('/users', (req, res) => {
   oneUpClient.createUser(req.body.applicationUserId).then((user) => {
     usersTable.addUser(user);
-    res.redirect('/users')
+    res.redirect('/users');
   }).catch((response) => {
     res.send('Error :(');
     console.error(response);
   });
 });
 
+// User connection: Redirects user to EHR login to connect data source
 app.get('/users/:userId/connections/:connectionId', (req, res) => {
   let user = usersTable.getUser(req.params.userId);
   let connection = connectionsTable.getConnection(req.params.connectionId);
@@ -79,13 +84,14 @@ app.get('/users/:userId/connections/:connectionId', (req, res) => {
   let state = Math.random().toString(20).substr(2, 6);
   oauthStateStore[state] = {
     redirectUrl: `/users/${user.app_user_id}`
-  }
+  };
 
   // Redirect user to auth connection URL
   let redirectUrl = oneUpClient.connectPatientUrl(connection.id, user.access_token, state);
   res.redirect(redirectUrl);
 });
 
+// OAuth callback: Receives callback from EHR connection after user authorizes data transfer
 app.get('/oauth/callback', (req, res) => {
   if (req.query.success == 'true') {
     let stateInfo = oauthStateStore[req.query.state].redirectUrl;
@@ -97,6 +103,7 @@ app.get('/oauth/callback', (req, res) => {
   }
 });
 
+// User patients page: Displays all patients the user is authorized to see
 app.get('/users/:userId/patients', (req, res) => {
   let user = usersTable.getUser(req.params.userId);
   let userAccessToken = user.access_token;
@@ -109,6 +116,7 @@ app.get('/users/:userId/patients', (req, res) => {
   });
 });
 
+// User patients everything page: Displays all data for a patient that the user is authorized to see
 app.get('/users/:userId/patients/:patientId/everything', (req, res) => {
   let user = usersTable.getUser(req.params.userId);
   let patientId = req.params.patientId;
@@ -116,9 +124,8 @@ app.get('/users/:userId/patients/:patientId/everything', (req, res) => {
   let userAccessToken = user.access_token;
 
   oneUpClient.getPatientEverything(userAccessToken, patientId, skip).then((everything) => {
-    // console.log(JSON.stringify(everything));
-    let nextLink = everything.link && everything.link.find((el) => el.relation == "next");
-    res.render('patients/everything', { user, patientId, skip, everything, nextLink })
+    let nextLink = everything.link && everything.link.find((el) => el.relation == 'next');
+    res.render('patients/everything', { user, patientId, skip, everything, nextLink });
   }).catch((response) => {
     res.send('Error :(');
     console.error(response);

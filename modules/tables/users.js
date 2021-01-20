@@ -1,3 +1,8 @@
+/*
+  UserTable is an in-memory, schemaless table class that contains information
+  about users
+*/
+
 class UserTable {
   constructor() {
     this.table = {};
@@ -27,7 +32,7 @@ class UserTable {
     user = this.table[id];
 
     for(let key in newData) {
-      user[key] = newData[key]
+      user[key] = newData[key];
     }
 
     return this.table[id];
@@ -41,6 +46,7 @@ class UserTable {
 const usersTable = new UserTable();
 
 const seedUsersFromOneUp = (oneUpClient) => {
+  // Seed users from 1upHealth API
   oneUpClient.getUsers().then((users) => {
     for (user of users) {
       usersTable.addUser(user);
