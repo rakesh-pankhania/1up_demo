@@ -83,7 +83,7 @@ app.get('/users/:userId/connections/:connectionId', (req, res) => {
   // Generate state and save to store
   let state = Math.random().toString(20).substr(2, 6);
   oauthStateStore[state] = {
-    redirectUrl: `/users/${user.app_user_id}`
+    redirectUrl: `/users/${user.app_user_id}/patients`
   };
 
   // Redirect user to auth connection URL
@@ -94,7 +94,7 @@ app.get('/users/:userId/connections/:connectionId', (req, res) => {
 // OAuth callback: Receives callback from EHR connection after user authorizes data transfer
 app.get('/oauth/callback', (req, res) => {
   if (req.query.success == 'true') {
-    let stateInfo = oauthStateStore[req.query.state].redirectUrl;
+    let redirectUrl = oauthStateStore[req.query.state].redirectUrl;
     res.redirect(redirectUrl);
   }
   else {
