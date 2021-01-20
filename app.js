@@ -7,7 +7,7 @@ const { OneUpClient } = require('./modules/one_up_health.js');
 // Set global server variables
 const app = express();
 const oneUpClient = new OneUpClient(process.env.OAUTH_CLIENT_ID, process.env.OAUTH_CLIENT_SECRET);
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 
 // Generate & seed database stores (kept in memory for now)
